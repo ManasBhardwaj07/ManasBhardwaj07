@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @ManasBhardwaj07
 - 👀 I’m interested in web development
-- 🌱 I’m currently learning .python,html,css,javascript
+- 🌱 I’m currently learning c,c++,javascript,Mongodb,Expressjs,Reactjs,Nodejs.
 - 💞️ I’m looking to collaborate on web development
 - 📫 How to reach me manasbhardwaj264@gmail.com
 
