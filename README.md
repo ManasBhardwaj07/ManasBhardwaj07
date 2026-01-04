@@ -52,10 +52,6 @@ I am a **4th-year Computer Science & Engineering student** at **Lovely Professio
 
 ### 📊 GitHub Stats
 
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=ManasBhardwaj07&show_icons=true&theme=tokyonight&hide_border=true&count_private=true" alt="Manas's Stats" />
-</p>
+![Manas's Stats](https://github-readme-stats.vercel.app/api?username=ManasBhardwaj07&show_icons=true&theme=tokyonight&hide_border=true)
 
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ManasBhardwaj07&layout=compact&theme=tokyonight&hide_border=true" alt="Top Languages" />
-</p>
+![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=ManasBhardwaj07&layout=compact&theme=tokyonight&hide_border=true)
