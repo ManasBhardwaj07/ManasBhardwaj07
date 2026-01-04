@@ -14,12 +14,12 @@
 
 ### 👨‍💻 About Me
 
-[cite_start]I am a **4th-year Computer Science & Engineering student** at **Lovely Professional University**[cite: 32, 33]. I am passionate about building scalable web applications and solving complex problems with code.
+I am a **4th-year Computer Science & Engineering student** at **Lovely Professional University**. I am passionate about building scalable web applications and solving complex problems with code.
 
 * 🔭 I’m currently working on **Microservices with Spring Boot & Docker**.
-* [cite_start]🛠️ I have built full-stack applications like **ProjectHub** (Collaboration Tool) and a **Blogging Platform**[cite: 14, 20].
-* [cite_start]🧠 I have solved **100+ DSA problems** on LeetCode & GeeksforGeeks[cite: 26].
-* [cite_start]📫 How to reach me: **manasbhardwaj264@gmail.com** [cite: 7]
+* 🛠️ I have built full-stack applications like **ProjectHub** (Collaboration Tool) and a **Blogging Platform**
+* 🧠 I have solved **100+ DSA problems** on LeetCode & GeeksforGeeks.
+* 📫 How to reach me: **manasbhardwaj264@gmail.com** 
 
 ---
 
