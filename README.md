@@ -102,14 +102,6 @@ Open to **Backend Engineer** and **Full-Stack Engineer** roles at product-focuse
 
 ---
 
-## 📊 GitHub Stats
-
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=ManasBhardwaj07&show_icons=true&theme=tokyonight&hide_border=true" alt="GitHub Stats" />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=ManasBhardwaj07&layout=compact&theme=tokyonight&hide_border=true" alt="Top Languages" />
-</p>
-
----
 
 <p align="center">
   <i>Building systems that stay up. Open to backend & full-stack roles at ambitious startups.</i>
