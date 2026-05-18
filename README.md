@@ -34,33 +34,32 @@ reliably — even under server overload — with no job loss and fast recovery.
 
 **Architecture decisions:**
 ┌─────────────────────────────────────────────────────┐
-│                   API Gateway                        │
-│            (Express.js + REST endpoint)              │
+│                   API Gateway                       │
+│            (Express.js + REST endpoint)             │
 └────────────────────┬────────────────────────────────┘
-│ enqueue
-▼
+                     │ enqueue
+                     ▼
 ┌─────────────────────────────────────────────────────┐
-│              Redis Queue (BullMQ)                    │
+│              Redis Queue (BullMQ)                   │
 │     Priority lanes · Retry state · Job metadata     │
 └────────┬──────────────────────────┬─────────────────┘
-│                          │
-▼                          ▼
+         │                          │
+         ▼                          ▼
 ┌────────────────┐        ┌────────────────┐
 │   Worker Pod 1 │        │   Worker Pod N │   ← Docker-isolated
 │  (job type A)  │  ...   │  (job type X)  │   ← per job type
 └────────┬───────┘        └───────┬────────┘
-│                        │
-▼                        ▼
+         │                        │
+         ▼                        ▼
 ┌─────────────────────────────────────────────────────┐
-│          Exponential Backoff Retry Engine            │
-│   Attempt 1 → 2s · Attempt 2 → 4s · ... → DLQ      │
+│          Exponential Backoff Retry Engine           │
+│   Attempt 1 → 2s · Attempt 2 → 4s · ... → DLQ       │
 └─────────────────────────────────────────────────────┘
-│
-▼
+                     │
+                     ▼
 ┌─────────────────────────────────────────────────────┐
-│      Structured Logging + Job Status Telemetry       │
+│      Structured Logging + Job Status Telemetry      │
 └─────────────────────────────────────────────────────┘
-
 **Key outcomes:**
 - ✅ **10,000+ tasks** processed at **99.9% execution reliability**
 - ✅ **85% reduction** in task failures via exponential backoff + dead-letter routing
