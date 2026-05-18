@@ -18,7 +18,7 @@
 I build fault-tolerant backend systems — distributed job queues, real-time collaboration engines, and containerized execution pipelines. My stack is Node.js, Redis, BullMQ, Docker, AWS, and PostgreSQL. I care about the boundary between "working demo" and "production-grade infrastructure."
 
 Currently finishing B.Tech CSE at Lovely Professional University (May 2026).  
-Open to **Backend Engineer** and **Full-Stack Engineer** roles at product-focused startups.
+Open to **Backend Engineer** and **Full-Stack Engineer** where I can build, scale, and take ownership of high-impact infrastructure.
 
 ---
 
