@@ -63,7 +63,7 @@ Open to **Backend Engineer** and **Full-Stack Engineer** roles where I can build
 - **85% reduction** in task failures via exponential backoff + dead-letter routing
 - **50+ concurrent workers** containerized with Docker Compose on AWS EC2
 
-**[Live Demo](https://your-queueforge-demo-link.com) · [Source Code](https://github.com/ManasBhardwaj07/QueueForge)**
+**[Live Demo](https://queueforge.duckdns.org/) · [Source Code](https://github.com/ManasBhardwaj07/QueueForge)**
 
 ---
 
