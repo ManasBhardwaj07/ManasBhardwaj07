@@ -28,6 +28,7 @@ Open to **Backend Engineer** and **Full-Stack Engineer** roles where I can build
 
 **Architecture decisions:**
 
+<pre><code>
     ┌─────────────────────────────────────────────────────┐
     │                   API Gateway                       │
     │            (Express.js + REST endpoint)             │
@@ -55,13 +56,14 @@ Open to **Backend Engineer** and **Full-Stack Engineer** roles where I can build
     ┌─────────────────────────────────────────────────────┐
     │      Structured Logging + Job Status Telemetry      │
     └─────────────────────────────────────────────────────┘
+</code></pre>
 
 **Key outcomes:**
 - **10,000+ tasks** processed at **99.9% execution reliability**
 - **85% reduction** in task failures via exponential backoff + dead-letter routing
 - **50+ concurrent workers** containerized with Docker Compose on AWS EC2
 
-**[Live Demo](#) · [Source Code](#)**
+**[Live Demo](https://your-queueforge-demo-link.com) · [Source Code](https://github.com/ManasBhardwaj07/QueueForge)**
 
 ---
 
