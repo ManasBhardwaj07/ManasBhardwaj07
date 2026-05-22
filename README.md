@@ -4,14 +4,12 @@
   Backend Engineer · Distributed Systems · Real-Time Infrastructure
 </h3>
 
-<p align="center">
-  <a href="[https://www.linkedin.com/in/manas-bhardwaj-/](https://www.linkedin.com/in/manas-bhardwaj-/)">
-    <img src="[https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)" alt="LinkedIn" />
-  </a>
-  <a href="mailto:manasbhardwaj264@gmail.com">
-    <img src="[https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)" alt="Email" />
-  </a>
-</p>
+<div align="center">
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/manas-bhardwaj-/)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:manasbhardwaj264@gmail.com)
+
+</div>
 
 ---
 
