@@ -18,11 +18,11 @@
 I build fault-tolerant backend systems — distributed job queues, real-time collaboration engines, and containerized execution pipelines. My stack is Node.js, Redis, BullMQ, Docker, AWS, and PostgreSQL. I care about the boundary between "working demo" and "production-grade infrastructure."
 
 Currently finishing B.Tech CSE at Lovely Professional University (May 2026).  
-Open to **Backend Engineer** and **Full-Stack Engineer** where I can build, scale, and take ownership of high-impact infrastructure.
+Open to **Backend Engineer** and **Full-Stack Engineer** roles where I can build, scale, and take ownership of high-impact infrastructure.
 
 ---
 
-## 🏗️ Featured Architecture — QueueForge
+## Featured Architecture — QueueForge
 
 > Distributed Asynchronous Job Processing System
 
@@ -59,15 +59,15 @@ Open to **Backend Engineer** and **Full-Stack Engineer** where I can build, scal
     └─────────────────────────────────────────────────────┘
 
 **Key outcomes:**
-- ✅ **10,000+ tasks** processed at **99.9% execution reliability**
-- ✅ **85% reduction** in task failures via exponential backoff + dead-letter routing
-- ✅ **50+ concurrent workers** containerized with Docker Compose on AWS EC2
+- **10,000+ tasks** processed at **99.9% execution reliability**
+- **85% reduction** in task failures via exponential backoff + dead-letter routing
+- **50+ concurrent workers** containerized with Docker Compose on AWS EC2
 
 **[Live Demo](#) · [Source Code](#)**
 
 ---
 
-## 🚀 Projects
+## Projects
 
 | Project | What it does | Stack | Highlights |
 |---|---|---|---|
@@ -78,7 +78,7 @@ Open to **Backend Engineer** and **Full-Stack Engineer** where I can build, scal
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 **Languages** ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
@@ -102,7 +102,6 @@ Open to **Backend Engineer** and **Full-Stack Engineer** where I can build, scal
 
 ---
 
-
 <p align="center">
-  <i>Building systems that stay up. Open to backend & full-stack roles at ambitious startups.</i>
+  <i>Building systems that stay up. Open to backend & full-stack roles at high-impact engineering teams.</i>
 </p>
