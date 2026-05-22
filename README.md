@@ -13,7 +13,7 @@
 
 ---
 
-I build fault-tolerant backend systems — distributed job queues, real-time collaboration engines, and containerized execution pipelines. My stack is Node.js, Redis, BullMQ, Docker, AWS, and PostgreSQL. I care about the boundary between "working demo" and "production-grade infrastructure."
+I build fault-tolerant backend systems — distributed job queues, real-time collaboration engines, and containerized execution pipelines. My stack is Node.js, Spring Boot, Redis, BullMQ, Docker, AWS, and PostgreSQL. I care about the boundary between "working demo" and "production-grade infrastructure."
 
 Currently finishing B.Tech CSE at Lovely Professional University (May 2026).  
 Open to **Backend Engineer** and **Full-Stack Engineer** roles where I can build, scale, and take ownership of high-impact infrastructure.
@@ -83,10 +83,12 @@ Open to **Backend Engineer** and **Full-Stack Engineer** roles where I can build
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
+![C++](https://img.shields.io/badge/C++-00599C?style=flat-square&logo=c%2B%2B&logoColor=white)
 
 **Backend & Infrastructure**
 <br>
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat-square&logo=node.js&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-404D59?style=flat-square)
 ![BullMQ](https://img.shields.io/badge/BullMQ-EA4335?style=flat-square)
 ![Redis](https://img.shields.io/badge/Redis-D82C20?style=flat-square&logo=redis&logoColor=white)
