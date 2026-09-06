@@ -23,8 +23,8 @@
 
 I build backend systems that hold up under real load — distributed job queues, real-time WebSocket platforms, and Docker-sandboxed execution pipelines. My stack is the MERN ecosystem, BullMQ, Redis, Docker, and AWS. I care about the gap between a working demo and infrastructure that ships.
 
-Finishing B.Tech CSE at Lovely Professional University (May 2026).  
-Open to **Backend** and **Full-Stack** roles at ambitious product teams.
+**B.Tech CSE, Lovely Professional University (May 2026).**  
+Open to **Backend**, **Software Engineer**, and **Full-Stack** roles at ambitious product teams.
 
 ---
 
@@ -34,36 +34,34 @@ Open to **Backend** and **Full-Stack** roles at ambitious product teams.
 > `Node.js · BullMQ · Redis · MongoDB · Docker Compose · AWS EC2`
 
 **The engineering problem:** Build a job engine that handles massive, unpredictable task volume — reliably — even during server overload, Redis downtime, or worker crashes. No job loss. Fast recovery. Full observability.
-
-```
 ┌─────────────────────────────────────────────────────┐
 │                   API Gateway                       │
 │            (Express.js + REST endpoint)             │
 └────────────────────┬────────────────────────────────┘
-                     │ enqueue
-                     ▼
+│ enqueue
+▼
 ┌─────────────────────────────────────────────────────┐
 │              Redis Queue (BullMQ)                   │
 │     Priority lanes · Retry state · Job metadata     │
 └────────┬──────────────────────────┬─────────────────┘
-         │                          │
-         ▼                          ▼
+│                          │
+▼                          ▼
 ┌────────────────┐        ┌────────────────┐
 │   Worker Pod 1 │        │   Worker Pod N │  ← Docker-isolated
 │  (job type A)  │  ...   │  (job type X)  │  ← per job type
 └────────┬───────┘        └───────┬────────┘
-         │                        │
-         ▼                        ▼
+│                        │
+▼                        ▼
 ┌─────────────────────────────────────────────────────┐
 │          Exponential Backoff Retry Engine           │
 │   Attempt 1 → 2s · Attempt 2 → 4s · ... → DLQ      │
 └─────────────────────────────────────────────────────┘
-                     │
-                     ▼
+│
+▼
 ┌─────────────────────────────────────────────────────┐
 │       Structured Logging + Job Status Telemetry     │
 └─────────────────────────────────────────────────────┘
-```
+plain
 
 **Measured outcomes:**
 - ✅ **10,000+ tasks** processed at **99.9% execution reliability**
@@ -74,12 +72,52 @@ Open to **Backend** and **Full-Stack** roles at ambitious product teams.
 
 ---
 
+## Featured Architecture — CodeForge
+
+> **Distributed Code Execution Engine with Docker Sandboxing**  
+> `Next.js · TypeScript · BullMQ · Redis · Docker · PostgreSQL · Prisma ORM · Azure VM`
+
+**The engineering problem:** Safely execute untrusted user code in 5 languages without letting a single malicious or buggy submission crash the host, exhaust resources, or escape isolation.
+┌─────────────────────────────────────────────────────┐
+│                   Next.js API                       │
+│         (Express.js + BullMQ Producer)              │
+└────────────────────┬────────────────────────────────┘
+│ enqueue job
+▼
+┌─────────────────────────────────────────────────────┐
+│              Redis Queue (BullMQ)                   │
+│        Job state · Worker routing · DLQ             │
+└────────────────────┬────────────────────────────────┘
+│
+▼
+┌─────────────────────────────────────────────────────┐
+│              Worker Service                         │
+│   Docker sandbox (256MB, 0.5 CPU, --network none)   │
+│   Language runtimes: JS, Python, C, C++, Java       │
+└────────────────────┬────────────────────────────────┘
+│
+▼
+┌─────────────────────────────────────────────────────┐
+│         PostgreSQL + Prisma ORM                     │
+│    Execution state persistence · Request-ID tracing │
+└─────────────────────────────────────────────────────┘
+plain
+
+**Key safeguards:**
+- **Resource isolation:** 256MB memory, 0.5 CPU, read-only filesystem, network-disabled, non-root execution
+- **Failure recovery:** DLQ for 3 failure categories, stale execution cleanup, worker heartbeat TTL
+- **Observability:** Request-ID tracing across API → queue → worker layers
+
+**[Live Demo](https://codeforgeapp.duckdns.org) · [Source Code](https://github.com/ManasBhardwaj07/CodeForge)**
+
+---
+
 ## Projects
 
 | Project | What it solves | Stack | Key Outcome |
 |---|---|---|---|
 | **[QueueForge](https://github.com/ManasBhardwaj07/QueueForge)** | Distributed async job processing | Node.js, BullMQ, Redis, Docker, AWS | 10k+ tasks · 99.9% reliability · 85% failure reduction |
-| **[CodeForge](https://github.com/ManasBhardwaj07/CodeForge)** | Sandboxed multi-language code execution | Next.js, TypeScript, BullMQ, Docker, PostgreSQL | 5 languages · Docker sandbox · DLQ recovery |
+| **[CodeForge](https://github.com/ManasBhardwaj07/CodeForge)** | Sandboxed multi-language code execution | Next.js, TypeScript, BullMQ, Docker, PostgreSQL, Azure VM | 5 languages · Docker sandbox · DLQ recovery |
 | **[ProjectHub](https://github.com/ManasBhardwaj07/ProjectHub-Frontend)** | Real-time collaboration workspace | MERN, Socket.IO, Redis | Sub-100ms sync · 50+ users · 60% DB read reduction |
 | **[ApexDrive](https://github.com/ManasBhardwaj07/ApexDrive)** | Subscription golf rewards platform | React, Node.js, Supabase, Stripe | Stripe webhooks · RLS policies · admin analytics |
 
@@ -117,5 +155,5 @@ Open to **Backend** and **Full-Stack** roles at ambitious product teams.
 ---
 
 <p align="center">
-  <i>Building systems that stay up. Open to backend & full-stack roles at high-impact engineering teams.</i>
+  <i>Building systems that stay up. Open to backend, software engineer, and full-stack roles at high-impact engineering teams.</i>
 </p>
