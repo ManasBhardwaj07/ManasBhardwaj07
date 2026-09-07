@@ -1,7 +1,7 @@
 <h1 align="center">Manas Bhardwaj</h1>
 
 <h3 align="center">
-  Full-Stack Engineer &nbsp;·&nbsp; Distributed Systems &nbsp;·&nbsp; Real-Time Infrastructure &nbsp;·&nbsp; MERN Stack
+  Full-Stack Engineer &nbsp;·&nbsp; Backend Systems &nbsp;·&nbsp; Distributed Systems &nbsp;·&nbsp; Real-Time Infrastructure
 </h3>
 
 <p align="center">
@@ -21,10 +21,10 @@
 
 ---
 
-I build backend systems that hold up under real load — distributed job queues, real-time WebSocket platforms, and Docker-sandboxed execution pipelines. My stack is the MERN ecosystem, BullMQ, Redis, Docker, and AWS. I care about the gap between a working demo and infrastructure that ships.
+I build backend systems that hold up under real load — distributed job queues, real-time WebSocket platforms, and Docker-sandboxed execution pipelines. My stack centers on Node.js, TypeScript, React, BullMQ, Redis, PostgreSQL, Docker, and AWS. I care about the gap between a working demo and infrastructure that ships.
 
-Finishing B.Tech CSE at Lovely Professional University (May 2026).  
-Open to **Backend** and **Full-Stack** roles at ambitious product teams.
+B.Tech CSE, Lovely Professional University (May 2026).  
+Open to **Backend, Software Engineer, and Full-Stack** roles at ambitious product teams.
 
 ---
 
@@ -33,11 +33,11 @@ Open to **Backend** and **Full-Stack** roles at ambitious product teams.
 > **Distributed Asynchronous Job Processing System**  
 > `Node.js · BullMQ · Redis · MongoDB · Docker Compose · AWS EC2`
 
-**The engineering problem:** Build a job engine that handles massive, unpredictable task volume — reliably — even during server overload, Redis downtime, or worker crashes. No job loss. Fast recovery. Full observability.
+**The engineering problem:** Build a queue-driven job engine that isolates API requests from background execution while handling retries, worker failures, concurrent workloads, and transient infrastructure errors without blocking the request lifecycle.
 
-```
+```text
 ┌─────────────────────────────────────────────────────┐
-│                   API Gateway                       │
+│                    API Service                      │
 │            (Express.js + REST endpoint)             │
 └────────────────────┬────────────────────────────────┘
                      │ enqueue
@@ -49,26 +49,33 @@ Open to **Backend** and **Full-Stack** roles at ambitious product teams.
          │                          │
          ▼                          ▼
 ┌────────────────┐        ┌────────────────┐
-│   Worker Pod 1 │        │   Worker Pod N │  ← Docker-isolated
-│  (job type A)  │  ...   │  (job type X)  │  ← per job type
+│ Worker         │        │ Worker         │
+│ Container 1    │  ...   │ Container N    │
+│ (job type A)   │        │ (job type X)   │
 └────────┬───────┘        └───────┬────────┘
          │                        │
-         ▼                        ▼
+         └────────────┬───────────┘
+                      ▼
 ┌─────────────────────────────────────────────────────┐
-│          Exponential Backoff Retry Engine           │
-│   Attempt 1 → 2s · Attempt 2 → 4s · ... → DLQ      │
-└─────────────────────────────────────────────────────┘
+│           Retry & Failure Handling                  │
+│   Exponential Backoff · Failure Classification      │
+│                    · DLQ                            │
+└────────────────────┬────────────────────────────────┘
                      │
                      ▼
 ┌─────────────────────────────────────────────────────┐
-│       Structured Logging + Job Status Telemetry     │
+│       Structured Logging + Job Status Tracking      │
 └─────────────────────────────────────────────────────┘
 ```
 
-**Measured outcomes:**
-- ✅ **10,000+ tasks** processed at **99.9% execution reliability**
-- ✅ **85% reduction** in task failures via exponential backoff + dead-letter routing
-- ✅ **50+ concurrent workers** containerized and deployed on AWS EC2
+**Engineering outcomes:**
+
+- Asynchronous job execution with API/worker separation
+- Retry handling with exponential backoff and dead-letter routing
+- Failure classification for retryable vs permanent execution errors
+- Concurrent workload execution with consistent job-state tracking
+- Dockerized multi-service deployment on AWS EC2
+- Health, readiness, and security monitoring endpoints
 
 **[Live Demo](https://queueforge.duckdns.org) · [Source Code](https://github.com/ManasBhardwaj07/QueueForge)**
 
@@ -78,10 +85,10 @@ Open to **Backend** and **Full-Stack** roles at ambitious product teams.
 
 | Project | What it solves | Stack | Key Outcome |
 |---|---|---|---|
-| **[QueueForge](https://github.com/ManasBhardwaj07/QueueForge)** | Distributed async job processing | Node.js, BullMQ, Redis, Docker, AWS | 10k+ tasks · 99.9% reliability · 85% failure reduction |
+| **[QueueForge](https://github.com/ManasBhardwaj07/QueueForge)** | Distributed async job processing | Node.js, BullMQ, Redis, Docker, AWS | Worker isolation · retries · DLQ · fault-tolerant workflows |
 | **[CodeForge](https://github.com/ManasBhardwaj07/CodeForge)** | Sandboxed multi-language code execution | Next.js, TypeScript, BullMQ, Docker, PostgreSQL | 5 languages · Docker sandbox · DLQ recovery |
 | **[ProjectHub](https://github.com/ManasBhardwaj07/ProjectHub-Frontend)** | Real-time collaboration workspace | MERN, Socket.IO, Redis | Sub-100ms sync · 50+ users · 60% DB read reduction |
-| **[ApexDrive](https://github.com/ManasBhardwaj07/ApexDrive)** | Subscription golf rewards platform | React, Node.js, Supabase, Stripe | Stripe webhooks · RLS policies · admin analytics |
+| **[ApexDrive](https://github.com/ManasBhardwaj07/ApexDrive)** | Subscription golf rewards platform | React, Node.js, Supabase, Stripe | Stripe webhooks · RLS policies · atomic RPCs |
 
 ---
 
@@ -117,5 +124,5 @@ Open to **Backend** and **Full-Stack** roles at ambitious product teams.
 ---
 
 <p align="center">
-  <i>Building systems that stay up. Open to backend & full-stack roles at high-impact engineering teams.</i>
+  <i>Building systems that stay up. Open to backend, software engineering, and full-stack roles at high-impact engineering teams.</i>
 </p>
