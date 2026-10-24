@@ -63,8 +63,7 @@ I build full-stack software — React and Next.js interfaces on top of backend s
   │ Plans · tenants · upstreams · routes · API keys                                                    │
   │ Constant-time bearer auth · IP throttling · audit log                                              │
   │                                                                                                    │
-  └────────────────────────────────────────────────────────────────────────────────────────────────────┘                                          │
-
+  └────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Key decisions:**
