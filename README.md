@@ -1,6 +1,6 @@
 <h1 align="center">Manas Bhardwaj</h1>
 
-<h3 align="center">Software Engineer &nbsp;·&nbsp; Backend Systems &nbsp;·&nbsp; Distributed Systems &nbsp;·&nbsp; Full-Stack</h3>
+<h3 align="center">Software Engineer &nbsp;·&nbsp; Backend & Distributed Systems</h3>
 
 <p align="center">
   <a href="https://www.linkedin.com/in/manas-bhardwaj-/"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white" /></a>
@@ -16,9 +16,7 @@
 
 ---
 
-I build backend and distributed systems designed for real-world reliability: a programmable API gateway, an isolated code-execution engine, and fault-tolerant job queues. While I build across the entire stack, I focus on the infrastructure layer — rate limiting, container isolation, retry strategies, and failure recovery.
-
-Previously at **Emendo AI** &nbsp;·&nbsp; B.Tech Computer Science, Lovely Professional University.
+I build backend systems designed for correctness and failure recovery — API gateways, sandboxed code-execution engines, and distributed job queues — and ship them end to end across the full stack. My focus is what happens when things break: rate limiting under burst traffic, container isolation, and retry strategies that recover predictably.
 
 ---
 
@@ -66,13 +64,12 @@ Previously at **Emendo AI** &nbsp;·&nbsp; B.Tech Computer Science, Lovely Profe
 └──────────────────────────────────────────────────────────────┘
 ```
 
-**What makes this non-trivial:**
+**Key decisions:**
 - **Atomic rate limiting:** Sliding-window limits and monthly quotas are checked in a single Redis Lua script — one roundtrip, no distributed lock, no check-then-increment race under concurrent bursts.
-- **SSRF defense in two phases:** Upstream targets are validated when routes are defined and re-validated at connection time with IP pinning, protecting against private subnets, link-local and cloud-metadata addresses, and DNS rebinding.
-- **Port-level plane isolation:** The admin control plane runs on `:4001` inside the internal Docker network and is never exposed through Caddy. Protected by constant-time bearer checks, IP throttling, and audit logging.
-- **Key lifecycle:** API keys are stored solely as SHA-256 hashes. Lookups hit Redis first with a PostgreSQL fallback; revoked keys are denied at the gateway entry before any downstream logic runs.
-- **108 Vitest tests across 11 suites** covering burst traffic, SSRF evasion vectors (decimal IP encoding, DNS rebinding), and upstream failure modes.
-- [Live Demo](https://gateforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/GateForge)
+- **SSRF defense in two phases:** Upstream targets are validated when routes are defined and re-validated at connection time with IP pinning, covering private subnets, link-local and cloud-metadata addresses, and DNS rebinding.
+- **Control plane never public:** The admin API runs on `:4001` inside the internal Docker network and is never exposed through Caddy. API keys are stored only as SHA-256 hashes.
+
+**108 Vitest tests across 11 suites** &nbsp;·&nbsp; [Live Demo](https://gateforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/GateForge)
 
 ---
 
@@ -125,13 +122,12 @@ Previously at **Emendo AI** &nbsp;·&nbsp; B.Tech Computer Science, Lovely Profe
 └──────────────────────────────────────────────────────────────┘
 ```
 
-**What makes this non-trivial:**
-- **Untrusted code isolation:** Each execution runs in a newly spawned, ephemeral Docker container with a hard timeout, output truncation, a non-root user, and a read-only root filesystem.
-- **Dual execution paths:** An ephemeral `Run` pipeline with custom input vs. a DB-backed `Submit` pipeline tested against hidden cases, with a deterministic verdict hierarchy (`TIMEOUT` strictly outranks `WRONG_ANSWER`).
-- **Worker observability and recovery:** Workers publish TTL heartbeat keys to Redis that feed queue-health endpoints; failed jobs move to a Dead Letter Queue with inspect, replay, and delete APIs.
-- **Abuse and recovery testing:** Dedicated scripts cover infinite loops, stdout flooding, orphan-container sweeps (`ops:audit-cleanup`), and sudden worker termination (`ops:recovery-kill-worker`).
-- **Serverless database integration:** Connection pooling tuned for Neon PostgreSQL's auto-suspend and resume behavior.
-- [Live Demo](https://codeforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/CodeForge)
+**Key decisions:**
+- **Untrusted code, contained:** Every execution runs in a newly spawned, ephemeral Docker container with a hard timeout, output truncation, a non-root user, and a read-only root filesystem.
+- **Run vs Submit:** An ephemeral `Run` path with custom input vs. a DB-backed `Submit` path tested against hidden cases, with a deterministic verdict hierarchy (`TIMEOUT` strictly outranks `WRONG_ANSWER`).
+- **Designed for failure:** Redis TTL heartbeats feed queue-health endpoints, failed jobs land in an inspectable Dead Letter Queue, and dedicated scripts test infinite loops, stdout flooding, orphan-container cleanup, and worker hard-kill recovery.
+
+[Live Demo](https://codeforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/CodeForge)
 
 ---
 
