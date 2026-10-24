@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <b>Atomic Rate Limiting</b> &nbsp;·&nbsp; <b>Sandboxed Code Execution</b> &nbsp;·&nbsp; <b>Failure-Aware Job Processing</b>
+  <b>Frontend Interfaces</b> &nbsp;·&nbsp; <b>End-to-End Product Engineering</b> &nbsp;·&nbsp; <b>APIs & Backend Systems</b>
 </p>
 
 ---
@@ -151,4 +151,4 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 ---
 
-<p align="center"><i>Systems that hold under burst traffic, contain hostile code, and recover from failure — every claim above links to code you can read.</i></p>
+<p align="center"><i>Building across the stack, from user-facing interfaces to dependable APIs and backend services.</i></p>
