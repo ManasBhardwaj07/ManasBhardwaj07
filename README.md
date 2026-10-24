@@ -1,4 +1,4 @@
-<h1 align="center">Manas Bhardwaj</h1>
+ <h1 align="center">Manas Bhardwaj</h1>
 
 <h3 align="center">Software Engineer &nbsp;·&nbsp; Backend & Distributed Systems</h3>
 
@@ -25,7 +25,7 @@ I build backend systems designed for correctness and failure recovery — API ga
 ### GateForge — Programmable API Gateway
 
 > `TypeScript · Node.js · Express · Redis (Lua) · PostgreSQL · Prisma · Next.js · Docker · Azure · Caddy`
->
+
 > A multi-tenant API gateway built from first principles. Authentication, rate limiting, quota enforcement, routing, and SSRF defense are hand-written rather than delegated to third-party abstractions.
 
 ```text
@@ -36,16 +36,16 @@ I build backend systems designed for correctness and failure recovery — API ga
 │ Dashboard :3000       Next.js, served via Caddy              │
 │   metrics · traffic playground · Decision Inspector          │
 └──────────────────────────────────────────────────────────────┘
-                                │
-                                │ config + hashed keys
-                                ▼
+                              │
+                              │ config + hashed keys
+                              ▼
 ┌─ STATE ──────────────────────────────────────────────────────┐
 │ PostgreSQL 16   source of truth (Prisma)                     │
 │ Redis 7         key cache · rate-limit + quota counters      │
 └──────────────────────────────────────────────────────────────┘
-                                │
-                                │ read on every request
-                                ▼
+                              │
+                              │ state accessed as needed
+                              ▼
 ┌─ DATA PLANE :4000  ◄── client requests (X-API-Key) ──────────┐
 │ 1  Auth     SHA-256 hash → Redis → Postgres fallback         │
 │ 2  Tenant   resolve organization + plan                      │
@@ -56,9 +56,9 @@ I build backend systems designed for correctness and failure recovery — API ga
 │             pin the resolved IP                              │
 │ 6  Proxy    forward + inject X-Request-Id                    │
 └──────────────────────────────────────────────────────────────┘
-                                │
-                                │ proxied request
-                                ▼
+                              │
+                              │ proxied request
+                              ▼
 ┌─ UPSTREAM SERVICES ──────────────────────────────────────────┐
 │ Your APIs (demo: mock-orders :5001 · mock-payments :5002)    │
 └──────────────────────────────────────────────────────────────┘
@@ -76,28 +76,28 @@ I build backend systems designed for correctness and failure recovery — API ga
 ### CodeForge — Sandboxed Code Execution Platform
 
 > `Next.js · TypeScript · BullMQ · Redis · Docker · Prisma · Neon PostgreSQL · Azure · Caddy`
->
+
 > An asynchronous, queue-backed platform running untrusted code across 5 languages (JavaScript, Python, C, C++, Java), engineered for deterministic execution and operational resilience under abusive workloads.
 
 ```text
 ┌─ NEXT.JS FRONTEND ───────────────────────────────────────────┐
 │ Code editor · submission history · status polling            │
 └──────────────────────────────────────────────────────────────┘
-                                │
-                                │ POST /api/run  ·  /api/submit
-                                ▼
+                              │
+                              │ POST /api/run  ·  /api/submit
+                              ▼
 ┌─ NEXT.JS API ROUTES ─────────────────────────────────────────┐
 │ Auth · run · submit · enqueue job                            │
 └──────────────────────────────────────────────────────────────┘
-                                │
-                                │ job written to Redis
-                                ▼
+                              │
+                              │ job written to Redis
+                              ▼
 ┌─ REDIS · BULLMQ ─────────────────────────────────────────────┐
 │ Job state · retry metadata · worker heartbeats (TTL keys)    │
 └──────────────────────────────────────────────────────────────┘
-                                │
-                                │ worker pulls job
-                                ▼
+                              │
+                              │ worker pulls job
+                              ▼
 ┌─ NODE.JS WORKER ─────────────────────────────────────────────┐
 │ Docker sandbox   (ephemeral container per execution)         │
 │   Languages  JavaScript · Python · C · C++ · Java            │
@@ -113,9 +113,9 @@ I build backend systems designed for correctness and failure recovery — API ga
 │   Retry, then Dead Letter Queue                              │
 │   DLQ endpoints: inspect · replay · delete                   │
 └──────────────────────────────────────────────────────────────┘
-                                │
-                                │ results + verdicts
-                                ▼
+                              │
+                              │ results + verdicts
+                              ▼
 ┌─ NEON POSTGRESQL (via Prisma) ───────────────────────────────┐
 │ Problems · test cases · submissions · verdicts               │
 │ Connection pooling tuned for scale-to-zero autosuspend       │
@@ -155,5 +155,5 @@ I build backend systems designed for correctness and failure recovery — API ga
 ---
 
 <p align="center">
-  <i>"Building backend systems with production constraints in mind: deterministic behavior under load, strict isolation boundaries, and zero unhandled failure modes."</i>
+  <i>Building backend systems with production constraints in mind: deterministic behavior under load, strict isolation boundaries, and deliberate failure recovery.</i>
 </p>
