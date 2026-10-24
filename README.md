@@ -38,36 +38,35 @@ I build full-stack software — React and Next.js interfaces on top of backend s
   CLIENT TRAFFIC (X-API-Key)
               │
               ▼
-  ┌──────────────────────────────── DATA PLANE (:4000) ────────────────────────────────┐
-  │                                                                                     │
-  │   [ 1. AUTH & TENANT ] ──► [ 2. ATOMIC POLICY ] ──► [ 3. SSRF & ROUTING ] ──► [ 4. PROXY ]
-  │   • SHA-256 hash match     • Sliding-Window limit   • Longest-prefix match  • Inject X-Trace
-  │   • Redis ➔ PG fallback    • Monthly quota check    • DNS rebinding shield  • Forward to    
-  │   • Resolve Org & Plan     • Single Lua roundtrip   • Pin resolved IP         Upstream APIs 
-  │                                                                                     │
-  └───────────────────┬──────────────────────┬──────────────────────────────────────────┘
-                      │                      │
-          runtime cache & counters           │ proxied request
-                      │                      ▼
-                      ▼           ┌───────────────────────┐   ┌─────────────────────────┐
-  ┌───────────────────────────────┤  UPSTREAM SERVICES    │   │  NEXT.JS DASHBOARD      │
-  │  STATE & CACHE LAYER          │  • mock-orders (:5001)│   │  Port 3000 (via Caddy)  │
-  │  • Redis 7: Rate limits,      │  • mock-payments(:5002│   │  • Live Telemetry & RPS │
-  │    token cache & quota state  │  └────────────────────┘   │  • Decision Inspector   │
-  │  • PostgreSQL 16: System      │                           │  • Traffic Playground   │
-  │    source-of-truth (Prisma)   │◄──────────────────────────┴─────────────────────────┘
-  └───────────────▲───────────────┘       admin management (internal only)
-                  │
-  ┌───────────────┴─────────────────────────────────────────────────────────────────────┐
-  │  PRIVATE CONTROL PLANE (:4001) · Isolated Internal Docker Network                   │
-  │  • Tenant & Plan Provisioning  • Dynamic Route Config  • Constant-Time Bearer Auth  │
-  └─────────────────────────────────────────────────────────────────────────────────────┘
+  ┌─ DATA PLANE :4000 ─────────────────────────────────────────────────────────────────────────────────┐
+  │ [1] AUTH + TENANT     ─► [2] POLICY [A]        ─► [3] ROUTE + SSRF [B]  ─► [4] PROXY               │
+  │                                                                                                    │
+  │ • SHA-256 hash match     • Sliding-window limit   • Longest-prefix match   • Forward upstream      │
+  │ • Redis → PG fallback    • Monthly quota check    • Block private IPs,     • Inject X-Request-Id   │
+  │ • Resolve org + plan     • One atomic Lua call      metadata, rebinding    • Request telemetry     │
+  │                                                   • Pin resolved IP                                │
+  └────────────────────────────────────────────────────────────────────────────────────────────────────┘
+              ▲                                               │ proxied request
+              │ read on every request                         ▼
+  ┌─ STATE ────────────────────────────────────┐    ┌─ UPSTREAM SERVICES ────┐    ┌─ DASHBOARD :3000 ────┐
+  │ PostgreSQL 16  source of truth             │    │ Your APIs (demo):      │    │ Next.js via Caddy    │
+  │   (Prisma)                                 │    │ mock-orders :5001      │    │ live metrics         │
+  │ Redis 7  key cache · rate-limit            │    │ mock-payments :5002    │    │ traffic playground   │
+  │   + quota counters                         │    │                        │    │ Decision Inspector   │
+  └────────────────────────────────────────────┘    └────────────────────────┘    └──────────────────────┘
+              ▲
+              │ config + hashed keys
+  ┌─ PRIVATE CONTROL PLANE :4001 [C] ────────────────────────────────────────────────────────────────────┐
+  │ Docker-internal only, never exposed through Caddy                                                    │
+  │ plans · tenants · upstreams · routes · API keys                                                      │
+  │ constant-time bearer auth · IP throttling · audit log                                                │
+  └──────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Key decisions:**
-- **Atomic rate limiting:** Sliding-window limits and monthly quotas are checked in a single Redis Lua script — one roundtrip, no distributed lock, no check-then-increment race under concurrent bursts.
-- **SSRF defense in two phases:** Upstream targets are validated when routes are defined and re-validated at connection time with IP pinning, covering private subnets, link-local and cloud-metadata addresses, and DNS rebinding.
-- **Control plane never public:** The admin API runs on `:4001` inside the internal Docker network and is never exposed through Caddy. API keys are stored only as SHA-256 hashes.
+- **[A] Atomic rate limiting:** Sliding-window limits and monthly quotas are checked in a single Redis Lua script — one roundtrip, no distributed lock, no check-then-increment race under concurrent bursts.
+- **[B] SSRF defense in two phases:** Upstream targets are validated when routes are defined and re-validated at connection time with IP pinning, covering private subnets, link-local and cloud-metadata addresses, and DNS rebinding.
+- **[C] Control plane never public:** The admin API runs on `:4001` inside the internal Docker network and is never exposed through Caddy. API keys are stored only as SHA-256 hashes.
 
 **108 Vitest tests across 11 suites** &nbsp;·&nbsp; [Live Demo](https://gateforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/GateForge)
 
@@ -82,48 +81,43 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 > **Interface:** Next.js app with a code editor, submission history, and live status polling.
 
 ```text
-  CLIENT / CODE EDITOR (JS · Python · C · C++ · Java)
-                        │
-                        ▼
-  ┌──────────────────────────────── FRONTEND & INGRESS (Next.js) ───────────────────────┐
-  │  • Monaco Editor + Status Polling UI                                                │
-  │  • POST /api/run    ──► Ephemeral test run with custom stdin                        │
-  │  • POST /api/submit ──► Graded submission evaluated against hidden test suites      │
-  └───────────────────────────────────────────┬─────────────────────────────────────────┘
-                                              │ enqueue execution job
-                                              ▼
-  ┌─────────────────────────────── ASYNC JOB QUEUE (Redis + BullMQ) ────────────────────┐
-  │  • Job Lifecycle Tracking   • Worker TTL Heartbeats   • Exponential Backoff Retries │
-  └───────────────────────────────────────────┬─────────────────────────────────────────┘
-                                              │ worker pulls job
-                                              ▼
-  ┌────────────────────────────── WORKER EXECUTION ENGINE ──────────────────────────────┐
-  │                                                                                     │
-  │   ┌─ EPHEMERAL DOCKER SANDBOX (Spawns 1 fresh container per run) ───────────────┐   │
-  │   │  • Isolation: Non-root user (uid 1000) & Read-only root filesystem          │   │
-  │   │  • Guardrails: CPU/RAM cgroups · Hard timeout SIGKILL · stdout/err bounded  │   │
-  │   │  • Compiles & runs code in isolated memory space                            │   │
-  │   └───────────────────────────────────────┬─────────────────────────────────────┘   │
-  │                                           │ captured exit code, streams & time      │
-  │                                           ▼                                         │
-  │   ┌─ DETERMINISTIC VERDICT ENGINE ──────────────────────────────────────────────┐   │
-  │   │  Strict Hierarchy: TIMEOUT ──► COMPILE_ERR ──► RUNTIME_ERR ──► WA ──► ACCEPT │   │
-  │   └─────────────────────────────────────────────────────────────────────────────┘   │
-  │                                                                                     │
-  └───────────────────────┬─────────────────────────────────────────────┬───────────────┘
-                          │ success / graded verdicts                   │ poison / failed job
-                          ▼                                             ▼
-  ┌──────────────────────────────────────────────┐  ┌───────────────────────────────────┐
-  │  STORAGE LAYER (Neon PostgreSQL + Prisma)    │  │  DEAD LETTER QUEUE (DLQ)          │
-  │  • Problems catalog, test cases & submissions│  │  • Isolated failed & abusive jobs │
-  │  • Connection pool tuned for scale-to-zero   │  │  • Endpoints: Inspect · Replay    │
-  └──────────────────────────────────────────────┘  └───────────────────────────────────┘
+  CLIENT / CODE EDITOR  (JavaScript · Python · C · C++ · Java)
+              │
+              ▼
+  ┌─ FRONTEND + API ROUTES (Next.js) ────────────────────────────────────────────────────────────┐
+  │ Code editor · submission history · status polling                                            │
+  │ POST /api/run     ──►  ephemeral run with custom input                                       │
+  │ POST /api/submit  ──►  graded run against hidden test cases                                  │
+  └──────────────────────────────────────────────────────────────────────────────────────────────┘
+              │ enqueue job
+              ▼
+  ┌─ REDIS + BULLMQ QUEUE ───────────────────────────────────────────────────────────────────────┐
+  │ job state · retry metadata                                                                   │
+  │ worker heartbeats (TTL keys) → queue-health endpoints                                        │
+  └──────────────────────────────────────────────────────────────────────────────────────────────┘
+              │ worker pulls job
+              ▼
+  ┌─ NODE.JS WORKER ─────────────────────────────────────────────────────────────────────────────┐
+  │ Docker sandbox [A]   one ephemeral container per execution                                   │
+  │   non-root user · read-only root filesystem · hard timeout kill · output size bounded        │
+  │                                                                                              │
+  │ Verdict aggregation [B]   deterministic precedence                                           │
+  │   Accepted · Compile Error · Timeout · Runtime Error · Wrong Answer                          │
+  │   TIMEOUT outranks WRONG_ANSWER                                                              │
+  └──────────────────────────────────────────────────────────────────────────────────────────────┘
+              │ results + verdicts                          │ on failure [C]
+              ▼                                             ▼
+  ┌─ NEON POSTGRESQL (via Prisma) ─────────────┐    ┌─ RETRY → DEAD LETTER QUEUE ────────────────┐
+  │ problems · test cases · submissions        │    │ failed jobs are retried, then parked       │
+  │ verdicts · pooling tuned for               │    │ endpoints: inspect · replay · delete       │
+  │ scale-to-zero autosuspend                  │    │                                            │
+  └────────────────────────────────────────────┘    └────────────────────────────────────────────┘
 ```
 
 **Key decisions:**
-- **Untrusted code, contained:** Every execution runs in a newly spawned, ephemeral Docker container with a hard timeout, output truncation, a non-root user, and a read-only root filesystem.
-- **Run vs Submit:** An ephemeral `Run` path with custom input vs. a DB-backed `Submit` path tested against hidden cases, with a deterministic verdict hierarchy (`TIMEOUT` strictly outranks `WRONG_ANSWER`).
-- **Designed for failure:** Redis TTL heartbeats feed queue-health endpoints, failed jobs land in an inspectable Dead Letter Queue, and dedicated scripts test infinite loops, stdout flooding, orphan-container cleanup, and worker hard-kill recovery.
+- **[A] Untrusted code, contained:** Every execution runs in a newly spawned, ephemeral Docker container with a hard timeout, output truncation, a non-root user, and a read-only root filesystem.
+- **[B] Run vs Submit:** An ephemeral `Run` path with custom input vs. a DB-backed `Submit` path tested against hidden cases, with a deterministic verdict hierarchy (`TIMEOUT` strictly outranks `WRONG_ANSWER`).
+- **[C] Designed for failure:** Redis TTL heartbeats feed queue-health endpoints, failed jobs land in an inspectable Dead Letter Queue, and dedicated scripts test infinite loops, stdout flooding, orphan-container cleanup, and worker hard-kill recovery.
 
 [Live Demo](https://codeforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/CodeForge)
 
