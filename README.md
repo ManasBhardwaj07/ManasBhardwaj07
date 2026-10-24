@@ -35,27 +35,39 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 > **Interface:** Next.js dashboard with live metrics, a traffic playground, and a per-request Decision Inspector.
 
 ```text
-REQUEST PATH   client sends X-API-Key
-Authenticate + tenant ──►  Enforce policy ─────────►  Route + SSRF guard ─────►  Proxy to upstream
-SHA-256 hash lookup        Sliding-window limit +     Longest-prefix match       Forward + X-Request-Id
-Redis → Postgres fallback  monthly quota, atomic      SSRF: block private /      Request telemetry
-Resolve org + plan         Redis Lua script [A]       metadata / rebinding IPs
-                                                      pin resolved IP [B]
-
-SUPPORTING COMPONENTS
-┌─ PRIVATE CONTROL PLANE :4001 ──┐  ┌─ STATE ────────────────────────┐  ┌─ DASHBOARD :3000 ──────────────┐
-│ Docker-internal only [C]       │  │ PostgreSQL 16                  │  │ Next.js served via Caddy       │
-│ plans · tenants · upstreams    │  │   source of truth (Prisma)     │  │ live metrics                   │
-│ routes · API keys              │─►│ Redis 7                        │  │ traffic playground             │
-│ constant-time bearer auth      │  │   key cache · rate-limit +     │  │ Decision Inspector             │
-│ IP throttling · audit log      │  │   quota counters               │  │                                │
-└────────────────────────────────┘  └────────────────────────────────┘  └────────────────────────────────┘
+  CLIENT TRAFFIC (X-API-Key)
+              │
+              ▼
+  ┌──────────────────────────────── DATA PLANE (:4000) ────────────────────────────────┐
+  │                                                                                     │
+  │   [ 1. AUTH & TENANT ] ──► [ 2. ATOMIC POLICY ] ──► [ 3. SSRF & ROUTING ] ──► [ 4. PROXY ]
+  │   • SHA-256 hash match     • Sliding-Window limit   • Longest-prefix match  • Inject X-Trace
+  │   • Redis ➔ PG fallback    • Monthly quota check    • DNS rebinding shield  • Forward to    
+  │   • Resolve Org & Plan     • Single Lua roundtrip   • Pin resolved IP         Upstream APIs 
+  │                                                                                     │
+  └───────────────────┬──────────────────────┬──────────────────────────────────────────┘
+                      │                      │
+          runtime cache & counters           │ proxied request
+                      │                      ▼
+                      ▼           ┌───────────────────────┐   ┌─────────────────────────┐
+  ┌───────────────────────────────┤  UPSTREAM SERVICES    │   │  NEXT.JS DASHBOARD      │
+  │  STATE & CACHE LAYER          │  • mock-orders (:5001)│   │  Port 3000 (via Caddy)  │
+  │  • Redis 7: Rate limits,      │  • mock-payments(:5002│   │  • Live Telemetry & RPS │
+  │    token cache & quota state  │  └────────────────────┘   │  • Decision Inspector   │
+  │  • PostgreSQL 16: System      │                           │  • Traffic Playground   │
+  │    source-of-truth (Prisma)   │◄──────────────────────────┴─────────────────────────┘
+  └───────────────▲───────────────┘       admin management (internal only)
+                  │
+  ┌───────────────┴─────────────────────────────────────────────────────────────────────┐
+  │  PRIVATE CONTROL PLANE (:4001) · Isolated Internal Docker Network                   │
+  │  • Tenant & Plan Provisioning  • Dynamic Route Config  • Constant-Time Bearer Auth  │
+  └─────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Key decisions:**
-- **[A] Atomic rate limiting:** Sliding-window limits and monthly quotas are checked in a single Redis Lua script — one roundtrip, no distributed lock, no check-then-increment race under concurrent bursts.
-- **[B] SSRF defense in two phases:** Upstream targets are validated when routes are defined and re-validated at connection time with IP pinning, covering private subnets, link-local and cloud-metadata addresses, and DNS rebinding.
-- **[C] Control plane never public:** The admin API runs on `:4001` inside the internal Docker network and is never exposed through Caddy. API keys are stored only as SHA-256 hashes.
+- **Atomic rate limiting:** Sliding-window limits and monthly quotas are checked in a single Redis Lua script — one roundtrip, no distributed lock, no check-then-increment race under concurrent bursts.
+- **SSRF defense in two phases:** Upstream targets are validated when routes are defined and re-validated at connection time with IP pinning, covering private subnets, link-local and cloud-metadata addresses, and DNS rebinding.
+- **Control plane never public:** The admin API runs on `:4001` inside the internal Docker network and is never exposed through Caddy. API keys are stored only as SHA-256 hashes.
 
 **108 Vitest tests across 11 suites** &nbsp;·&nbsp; [Live Demo](https://gateforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/GateForge)
 
@@ -70,32 +82,48 @@ SUPPORTING COMPONENTS
 > **Interface:** Next.js app with a code editor, submission history, and live status polling.
 
 ```text
-EXECUTION PIPELINE
-Editor / API routes (Next.js)
-  │ POST /api/run (custom input)  ·  /api/submit (hidden test cases)
-  ▼
-Redis + BullMQ queue
-  │ job state · retry metadata · worker heartbeats (TTL keys)
-  ▼
-Worker + ephemeral Docker sandbox [A]
-  │ non-root user · read-only root filesystem · hard timeout kill · output size bounded
-  ▼
-Verdict aggregation [B]
-  │ Accepted · Compile Error · Timeout · Runtime Error · Wrong Answer  (TIMEOUT outranks WRONG_ANSWER)
-  ▼
-Persist + return results (Neon PostgreSQL via Prisma)
-    problems · test cases · submissions · verdicts · pooling tuned for scale-to-zero autosuspend
-
-FAILURE PATHS [C]
-• Hard timeout kills the container; stdout/stderr are truncated
-• Worker heartbeats (TTL keys) feed queue-health endpoints
-• Failed jobs: retry, then Dead Letter Queue — inspect · replay · delete
+  CLIENT / CODE EDITOR (JS · Python · C · C++ · Java)
+                        │
+                        ▼
+  ┌──────────────────────────────── FRONTEND & INGRESS (Next.js) ───────────────────────┐
+  │  • Monaco Editor + Status Polling UI                                                │
+  │  • POST /api/run    ──► Ephemeral test run with custom stdin                        │
+  │  • POST /api/submit ──► Graded submission evaluated against hidden test suites      │
+  └───────────────────────────────────────────┬─────────────────────────────────────────┘
+                                              │ enqueue execution job
+                                              ▼
+  ┌─────────────────────────────── ASYNC JOB QUEUE (Redis + BullMQ) ────────────────────┐
+  │  • Job Lifecycle Tracking   • Worker TTL Heartbeats   • Exponential Backoff Retries │
+  └───────────────────────────────────────────┬─────────────────────────────────────────┘
+                                              │ worker pulls job
+                                              ▼
+  ┌────────────────────────────── WORKER EXECUTION ENGINE ──────────────────────────────┐
+  │                                                                                     │
+  │   ┌─ EPHEMERAL DOCKER SANDBOX (Spawns 1 fresh container per run) ───────────────┐   │
+  │   │  • Isolation: Non-root user (uid 1000) & Read-only root filesystem          │   │
+  │   │  • Guardrails: CPU/RAM cgroups · Hard timeout SIGKILL · stdout/err bounded  │   │
+  │   │  • Compiles & runs code in isolated memory space                            │   │
+  │   └───────────────────────────────────────┬─────────────────────────────────────┘   │
+  │                                           │ captured exit code, streams & time      │
+  │                                           ▼                                         │
+  │   ┌─ DETERMINISTIC VERDICT ENGINE ──────────────────────────────────────────────┐   │
+  │   │  Strict Hierarchy: TIMEOUT ──► COMPILE_ERR ──► RUNTIME_ERR ──► WA ──► ACCEPT │   │
+  │   └─────────────────────────────────────────────────────────────────────────────┘   │
+  │                                                                                     │
+  └───────────────────────┬─────────────────────────────────────────────┬───────────────┘
+                          │ success / graded verdicts                   │ poison / failed job
+                          ▼                                             ▼
+  ┌──────────────────────────────────────────────┐  ┌───────────────────────────────────┐
+  │  STORAGE LAYER (Neon PostgreSQL + Prisma)    │  │  DEAD LETTER QUEUE (DLQ)          │
+  │  • Problems catalog, test cases & submissions│  │  • Isolated failed & abusive jobs │
+  │  • Connection pool tuned for scale-to-zero   │  │  • Endpoints: Inspect · Replay    │
+  └──────────────────────────────────────────────┘  └───────────────────────────────────┘
 ```
 
 **Key decisions:**
-- **[A] Untrusted code, contained:** Every execution runs in a newly spawned, ephemeral Docker container with a hard timeout, output truncation, a non-root user, and a read-only root filesystem.
-- **[B] Run vs Submit:** An ephemeral `Run` path with custom input vs. a DB-backed `Submit` path tested against hidden cases, with a deterministic verdict hierarchy (`TIMEOUT` strictly outranks `WRONG_ANSWER`).
-- **[C] Designed for failure:** Redis TTL heartbeats feed queue-health endpoints, failed jobs land in an inspectable Dead Letter Queue, and dedicated scripts test infinite loops, stdout flooding, orphan-container cleanup, and worker hard-kill recovery.
+- **Untrusted code, contained:** Every execution runs in a newly spawned, ephemeral Docker container with a hard timeout, output truncation, a non-root user, and a read-only root filesystem.
+- **Run vs Submit:** An ephemeral `Run` path with custom input vs. a DB-backed `Submit` path tested against hidden cases, with a deterministic verdict hierarchy (`TIMEOUT` strictly outranks `WRONG_ANSWER`).
+- **Designed for failure:** Redis TTL heartbeats feed queue-health endpoints, failed jobs land in an inspectable Dead Letter Queue, and dedicated scripts test infinite loops, stdout flooding, orphan-container cleanup, and worker hard-kill recovery.
 
 [Live Demo](https://codeforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/CodeForge)
 
@@ -117,12 +145,11 @@ FAILURE PATHS [C]
 
 | Layer | Technologies |
 |---|---|
-| **Languages** | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) &nbsp; ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) &nbsp; ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white) &nbsp; ![C++](https://img.shields.io/badge/C%2B%2B-00599C?style=flat-square&logo=cplusplus&logoColor=white) |
-| **Backend & Queues** | ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat-square&logo=nodedotjs&logoColor=white) &nbsp; ![Express.js](https://img.shields.io/badge/Express.js-404D59?style=flat-square&logo=express&logoColor=white) &nbsp; ![BullMQ](https://img.shields.io/badge/BullMQ-EA4335?style=flat-square) &nbsp; ![Redis](https://img.shields.io/badge/Redis-D82C20?style=flat-square&logo=redis&logoColor=white) &nbsp; ![Socket.IO](https://img.shields.io/badge/Socket.IO-010101?style=flat-square&logo=socketdotio&logoColor=white) |
-| **Frontend** | ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB) &nbsp; ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white) &nbsp; ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white) &nbsp; ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwindcss&logoColor=white) &nbsp; ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=flat-square&logo=framer&logoColor=white) |
-| **Databases & ORM** | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white) &nbsp; ![Neon](https://img.shields.io/badge/Neon_Serverless-00E599?style=flat-square&logo=neon&logoColor=black) &nbsp; ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=flat-square&logo=mongodb&logoColor=white) &nbsp; ![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=flat-square&logo=supabase&logoColor=black) &nbsp; ![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white) |
-| **Cloud & DevOps** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white) &nbsp; ![Docker Compose](https://img.shields.io/badge/Docker_Compose-2496ED?style=flat-square&logo=docker&logoColor=white) &nbsp; ![Azure VM](https://img.shields.io/badge/Azure_VM-0078D4?style=flat-square) &nbsp; ![AWS EC2](https://img.shields.io/badge/AWS_EC2-232F3E?style=flat-square) &nbsp; ![Caddy](https://img.shields.io/badge/Caddy-1F88C0?style=flat-square&logo=caddy&logoColor=white) &nbsp; ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white) &nbsp; ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat-square&logo=vitest&logoColor=white) |
-| **Security & Payments** | ![Stripe Webhooks](https://img.shields.io/badge/Stripe_Webhooks-635BFF?style=flat-square&logo=stripe&logoColor=white) &nbsp; ![JWT](https://img.shields.io/badge/JWT-000000?style=flat-square&logo=jsonwebtokens&logoColor=white) &nbsp; ![Row Level Security](https://img.shields.io/badge/Row_Level_Security-3FCF8E?style=flat-square&logo=supabase&logoColor=black) &nbsp; ![bcrypt](https://img.shields.io/badge/bcrypt-5A5A5A?style=flat-square) &nbsp; ![SHA-256](https://img.shields.io/badge/SHA--256-6E40C9?style=flat-square) |
+| **Languages** | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) &nbsp; ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black) &nbsp; ![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white) &nbsp; ![C++](https://img.shields.io/badge/C%2B%2B-00599C?style=flat-square&logo=cplusplus&logoColor=white) |
+| **Backend & Queues** | ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat-square&logo=nodedotjs&logoColor=white) &nbsp; ![Express.js](https://img.shields.io/badge/Express.js-404D59?style=flat-square&logo=express&logoColor=white) &nbsp; ![BullMQ](https://img.shields.io/badge/BullMQ-EA4335?style=flat-square) &nbsp; ![Redis](https://img.shields.io/badge/Redis-D82C20?style=flat-square&logo=redis&logoColor=white) |
+| **Frontend** | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white) &nbsp; ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB) &nbsp; ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwindcss&logoColor=white) &nbsp; ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=flat-square&logo=framer&logoColor=white) |
+| **Databases & ORM** | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white) &nbsp; ![Neon](https://img.shields.io/badge/Neon_Serverless-00E599?style=flat-square&logo=neon&logoColor=black) &nbsp; ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=flat-square&logo=mongodb&logoColor=white) &nbsp; ![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white) |
+| **Cloud & Infra** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white) &nbsp; ![AWS EC2](https://img.shields.io/badge/AWS_EC2-232F3E?style=flat-square) &nbsp; ![Azure VM](https://img.shields.io/badge/Azure_VM-0078D4?style=flat-square) &nbsp; ![Caddy](https://img.shields.io/badge/Caddy-1F88C0?style=flat-square&logo=caddy&logoColor=white) &nbsp; ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white) |
 
 ---
 
