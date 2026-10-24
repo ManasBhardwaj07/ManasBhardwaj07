@@ -1,6 +1,6 @@
 <h1 align="center">Manas Bhardwaj</h1>
 
-<h3 align="center">Software Engineer &nbsp;·&nbsp; Backend Systems &nbsp;·&nbsp; Distributed Infrastructure &nbsp;·&nbsp; Full-Stack</h3>
+<h3 align="center">Software Engineer &nbsp;·&nbsp; Full-Stack & Backend Systems</h3>
 
 <p align="center">
   <a href="https://www.linkedin.com/in/manas-bhardwaj-/"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white" /></a>
