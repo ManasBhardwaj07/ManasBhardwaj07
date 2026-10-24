@@ -18,23 +18,15 @@
   <b>Atomic Rate Limiting</b> &nbsp;·&nbsp; <b>Sandboxed Code Execution</b> &nbsp;·&nbsp; <b>Failure-Aware Job Processing</b>
 </p>
 
----
+I build full-stack software — React and Next.js interfaces on top of backend systems I design for failure: an API gateway, a sandboxed code-execution engine, and distributed job queues. I focus on what happens when things break — burst traffic, hostile code, failed jobs. Previously at Emendo AI.
+Featured Systems
+GateForge — Programmable API Gateway
+TypeScript · Node.js · Express · Redis (Lua) · PostgreSQL · Prisma · Next.js · Docker · Azure · Caddy
 
-I build full-stack software — React and Next.js interfaces on top of backend systems I design for failure: an API gateway, a sandboxed code-execution engine, and distributed job queues. I focus on what happens when things break — burst traffic, hostile code, failed jobs. Previously at **Emendo AI**.
+Multi-tenant API traffic control with atomic Redis rate limits, quota enforcement, longest-prefix routing, and SSRF-aware upstream validation.
 
----
+Interface: Next.js dashboard with live metrics, a traffic playground, and a per-request Decision Inspector.
 
-## Featured Systems
-
-### GateForge — Programmable API Gateway
-
-> `TypeScript · Node.js · Express · Redis (Lua) · PostgreSQL · Prisma · Next.js · Docker · Azure · Caddy`
->
-> Multi-tenant API traffic control with atomic Redis rate limits, quota enforcement, longest-prefix routing, and SSRF-aware upstream validation.
->
-> **Interface:** Next.js dashboard with live metrics, a traffic playground, and a per-request Decision Inspector.
-
-```text
   CLIENT TRAFFIC (X-API-Key)
               │
               ▼
@@ -61,26 +53,18 @@ I build full-stack software — React and Next.js interfaces on top of backend s
   │ plans · tenants · upstreams · routes · API keys                                                      │
   │ constant-time bearer auth · IP throttling · audit log                                                │
   └──────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+Key decisions:
+- [A] Atomic rate limiting: Sliding-window limits and monthly quotas are checked in a single Redis Lua script — one roundtrip, no distributed lock, no check-then-increment race under concurrent bursts.
+- [B] SSRF defense in two phases: Upstream targets are validated when routes are defined and re-validated at connection time with IP pinning, covering private subnets, link-local and cloud-metadata addresses, and DNS rebinding.
+- [C] Control plane never public: The admin API runs on :4001 inside the internal Docker network and is never exposed through Caddy. API keys are stored only as SHA-256 hashes.
+108 Vitest tests across 11 suites  ·  Live Demo  ·  Source Code
+CodeForge — Sandboxed Code Execution Platform
+Next.js · TypeScript · BullMQ · Redis · Docker · Prisma · Neon PostgreSQL · Azure · Caddy
 
-**Key decisions:**
-- **[A] Atomic rate limiting:** Sliding-window limits and monthly quotas are checked in a single Redis Lua script — one roundtrip, no distributed lock, no check-then-increment race under concurrent bursts.
-- **[B] SSRF defense in two phases:** Upstream targets are validated when routes are defined and re-validated at connection time with IP pinning, covering private subnets, link-local and cloud-metadata addresses, and DNS rebinding.
-- **[C] Control plane never public:** The admin API runs on `:4001` inside the internal Docker network and is never exposed through Caddy. API keys are stored only as SHA-256 hashes.
+Queue-backed code execution with Docker isolation, worker heartbeats, and deterministic verdict aggregation across 5 languages (JavaScript, Python, C, C++, Java).
 
-**108 Vitest tests across 11 suites** &nbsp;·&nbsp; [Live Demo](https://gateforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/GateForge)
+Interface: Next.js app with a code editor, submission history, and live status polling.
 
----
-
-### CodeForge — Sandboxed Code Execution Platform
-
-> `Next.js · TypeScript · BullMQ · Redis · Docker · Prisma · Neon PostgreSQL · Azure · Caddy`
->
-> Queue-backed code execution with Docker isolation, worker heartbeats, and deterministic verdict aggregation across 5 languages (JavaScript, Python, C, C++, Java).
->
-> **Interface:** Next.js app with a code editor, submission history, and live status polling.
-
-```text
   CLIENT / CODE EDITOR  (JavaScript · Python · C · C++ · Java)
               │
               ▼
@@ -112,28 +96,19 @@ I build full-stack software — React and Next.js interfaces on top of backend s
   │ verdicts · pooling tuned for               │    │ endpoints: inspect · replay · delete       │
   │ scale-to-zero autosuspend                  │    │                                            │
   └────────────────────────────────────────────┘    └────────────────────────────────────────────┘
-```
+Key decisions:
+- [A] Untrusted code, contained: Every execution runs in a newly spawned, ephemeral Docker container with a hard timeout, output truncation, a non-root user, and a read-only root filesystem.
+- [B] Run vs Submit: An ephemeral Run path with custom input vs. a DB-backed Submit path tested against hidden cases, with a deterministic verdict hierarchy (TIMEOUT strictly outranks WRONG_ANSWER).
+- [C] Designed for failure: Redis TTL heartbeats feed queue-health endpoints, failed jobs land in an inspectable Dead Letter Queue, and dedicated scripts test infinite loops, stdout flooding, orphan-container cleanup, and worker hard-kill recovery.
+Live Demo  ·  Source Code
+Projects
+Project	What it solves	Stack	Key Outcomes
+GateForge	Multi-tenant API gateway: auth, rate limiting, routing, and observability	TypeScript, Node.js, Express, Redis (Lua), PostgreSQL, Next.js, Docker, Azure	Atomic Lua rate limiting · two-phase SSRF defense · plane isolation · 108 tests
+CodeForge	Sandboxed multi-language code execution with deterministic verdict aggregation	Next.js, TypeScript, BullMQ, Redis, Docker, Prisma, Neon PostgreSQL, Azure	Container isolation · deterministic verdicts · DLQ and worker heartbeats · abuse-tested
+ApexDrive	Subscription rewards platform with a monthly draw engine and charitable giving	React, Vite, Node.js, Supabase, PostgreSQL, Stripe	4 Stripe webhook lifecycle events · Row Level Security · DB-trigger score window · admin analytics
+ProjectHub	Real-time collaborative workspace with multi-user sync	React, Node.js, Express, Socket.IO, MongoDB Atlas, JWT	Drag-and-drop React UI · live WebSocket sync · RBAC · tokenized password reset
+QueueForge	Asynchronous distributed job processing with worker isolation	Node.js, BullMQ, Redis, MongoDB, Docker Compose, AWS EC2	Exponential backoff · retryable/permanent failure classification · 10/10 jobs completed in documented burst test
 
-**Key decisions:**
-- **[A] Untrusted code, contained:** Every execution runs in a newly spawned, ephemeral Docker container with a hard timeout, output truncation, a non-root user, and a read-only root filesystem.
-- **[B] Run vs Submit:** An ephemeral `Run` path with custom input vs. a DB-backed `Submit` path tested against hidden cases, with a deterministic verdict hierarchy (`TIMEOUT` strictly outranks `WRONG_ANSWER`).
-- **[C] Designed for failure:** Redis TTL heartbeats feed queue-health endpoints, failed jobs land in an inspectable Dead Letter Queue, and dedicated scripts test infinite loops, stdout flooding, orphan-container cleanup, and worker hard-kill recovery.
-
-[Live Demo](https://codeforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/CodeForge)
-
----
-
-## Projects
-
-| Project | What it solves | Stack | Key Outcomes |
-|---|---|---|---|
-| **[GateForge](https://github.com/ManasBhardwaj07/GateForge)** | Multi-tenant API gateway: auth, rate limiting, routing, and observability | TypeScript, Node.js, Express, Redis (Lua), PostgreSQL, Next.js, Docker, Azure | Atomic Lua rate limiting · two-phase SSRF defense · plane isolation · 108 tests |
-| **[CodeForge](https://github.com/ManasBhardwaj07/CodeForge)** | Sandboxed multi-language code execution with deterministic verdict aggregation | Next.js, TypeScript, BullMQ, Redis, Docker, Prisma, Neon PostgreSQL, Azure | Container isolation · deterministic verdicts · DLQ and worker heartbeats · abuse-tested |
-| **[ApexDrive](https://github.com/ManasBhardwaj07/ApexDrive)** | Subscription rewards platform with a monthly draw engine and charitable giving | React, Vite, Node.js, Supabase, PostgreSQL, Stripe | 4 Stripe webhook lifecycle events · Row Level Security · DB-trigger score window · admin analytics |
-| **[ProjectHub](https://github.com/ManasBhardwaj07/ProjectHub)** | Real-time collaborative workspace with multi-user sync | React, Node.js, Express, Socket.IO, MongoDB Atlas, JWT | Drag-and-drop React UI · live WebSocket sync · RBAC · tokenized password reset |
-| **[QueueForge](https://github.com/ManasBhardwaj07/QueueForge)** | Asynchronous distributed job processing with worker isolation | Node.js, BullMQ, Redis, MongoDB, Docker Compose, AWS EC2 | Exponential backoff · retryable/permanent failure classification · 10/10 jobs completed in documented burst test |
-
----
 
 ## Tech Stack
 
@@ -146,5 +121,6 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 | **Cloud & Infra** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white) &nbsp; ![AWS EC2](https://img.shields.io/badge/AWS_EC2-232F3E?style=flat-square) &nbsp; ![Azure VM](https://img.shields.io/badge/Azure_VM-0078D4?style=flat-square) &nbsp; ![Caddy](https://img.shields.io/badge/Caddy-1F88C0?style=flat-square&logo=caddy&logoColor=white) &nbsp; ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white) |
 
 ---
+
 
 <p align="center"><i>Systems that hold under burst traffic, contain hostile code, and recover from failure — every claim above links to code you can read.</i></p>
