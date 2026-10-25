@@ -1,22 +1,22 @@
-&lt;h1 align="center"&gt;Manas Bhardwaj&lt;/h1&gt;
+<h1 align="center">Manas Bhardwaj</h1>
 
-&lt;h3 align="center"&gt;Software Engineer &nbsp;·&nbsp; Full-Stack & Backend Systems&lt;/h3&gt;
+<h3 align="center">Software Engineer &nbsp;·&nbsp; Full-Stack & Backend Systems</h3>
 
-&lt;p align="center"&gt;
-  &lt;a href="https://www.linkedin.com/in/manas-bhardwaj-/"&gt;&lt;img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white" /&gt;&lt;/a&gt;
+<p align="center">
+  <a href="https://www.linkedin.com/in/manas-bhardwaj-/"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white" /></a>
   &nbsp;
-  &lt;a href="mailto:manasbhardwaj264@gmail.com"&gt;&lt;img alt="Email" src="https://img.shields.io/badge/Email-D14836?style=flat-square&logo=gmail&logoColor=white" /&gt;&lt;/a&gt;
+  <a href="mailto:manasbhardwaj264@gmail.com"><img alt="Email" src="https://img.shields.io/badge/Email-D14836?style=flat-square&logo=gmail&logoColor=white" /></a>
   &nbsp;
-  &lt;a href="https://gateforgeapp.duckdns.org"&gt;&lt;img alt="GateForge Live Demo" src="https://img.shields.io/badge/GateForge-Live-0ea5e9?style=flat-square" /&gt;&lt;/a&gt;
+  <a href="https://gateforgeapp.duckdns.org"><img alt="GateForge Live Demo" src="https://img.shields.io/badge/GateForge-Live-0ea5e9?style=flat-square" /></a>
   &nbsp;
-  &lt;a href="https://codeforgeapp.duckdns.org"&gt;&lt;img alt="CodeForge Live Demo" src="https://img.shields.io/badge/CodeForge-Live-8b5cf6?style=flat-square" /&gt;&lt;/a&gt;
+  <a href="https://codeforgeapp.duckdns.org"><img alt="CodeForge Live Demo" src="https://img.shields.io/badge/CodeForge-Live-8b5cf6?style=flat-square" /></a>
   &nbsp;
-  &lt;a href="https://apex-drive-frontend.vercel.app/"&gt;&lt;img alt="ApexDrive Live Demo" src="https://img.shields.io/badge/ApexDrive-Live-f59e0b?style=flat-square" /&gt;&lt;/a&gt;
-&lt;/p&gt;
+  <a href="https://apex-drive-frontend.vercel.app/"><img alt="ApexDrive Live Demo" src="https://img.shields.io/badge/ApexDrive-Live-f59e0b?style=flat-square" /></a>
+</p>
 
-&lt;p align="center"&gt;
-  &lt;b&gt;Frontend Interfaces&lt;/b&gt; &nbsp;·&nbsp; &lt;b&gt;End-to-End Product Engineering&lt;/b&gt; &nbsp;·&nbsp; &lt;b&gt;APIs & Backend Systems&lt;/b&gt;
-&lt;/p&gt;
+<p align="center">
+  <b>Frontend Interfaces</b> &nbsp;·&nbsp; <b>End-to-End Product Engineering</b> &nbsp;·&nbsp; <b>APIs & Backend Systems</b>
+</p>
 
 ---
 
@@ -28,11 +28,11 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 ### GateForge — Programmable API Gateway
 
-&gt; `TypeScript · Node.js · Express · Redis (Lua) · PostgreSQL · Prisma · Next.js · Docker · Azure · Caddy`
-&gt;
-&gt; Multi-tenant API traffic control with atomic Redis rate limits, quota enforcement, longest-prefix routing, and SSRF-aware upstream validation.
-&gt;
-&gt; **Interface:** Next.js dashboard with live metrics, a traffic playground, and a per-request Decision Inspector.
+> `TypeScript · Node.js · Express · Redis (Lua) · PostgreSQL · Prisma · Next.js · Docker · Azure · Caddy`
+>
+> Multi-tenant API traffic control with atomic Redis rate limits, quota enforcement, longest-prefix routing, and SSRF-aware upstream validation.
+>
+> **Interface:** Next.js dashboard with live metrics, a traffic playground, and a per-request Decision Inspector.
 
 ```text
     CLIENT TRAFFIC (X-API-Key)
@@ -77,11 +77,11 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 ### CodeForge — Sandboxed Code Execution Platform
 
-&gt; `Next.js · TypeScript · BullMQ · Redis · Docker · Prisma · Neon PostgreSQL · Azure · Caddy`
-&gt;
-&gt; Queue-backed code execution with Docker isolation, worker heartbeats, and deterministic verdict aggregation across 5 languages (JavaScript, Python, C, C++, Java).
-&gt;
-&gt; **Interface:** Next.js app with a code editor, submission history, and live status polling.
+> `Next.js · TypeScript · BullMQ · Redis · Docker · Prisma · Neon PostgreSQL · Azure · Caddy`
+>
+> Queue-backed code execution with Docker isolation, worker heartbeats, and deterministic verdict aggregation across 5 languages (JavaScript, Python, C, C++, Java).
+>
+> **Interface:** Next.js app with a code editor, submission history, and live status polling.
 
 ```text
   CLIENT / CODE EDITOR (JavaScript · Python · C · C++ · Java)
@@ -130,9 +130,9 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 | Project | What it solves | Stack | Key Outcomes |
 |---|---|---|---|
-| **[GateForge](https://gateforgeapp.duckdns.org/)** | Multi-tenant API gateway: auth, rate limiting, routing, and observability | TypeScript, Node.js, Express, Redis (Lua), PostgreSQL, Next.js, Docker, Azure | Atomic Lua rate limiting · two-phase SSRF defense · plane isolation · 108 tests |
-| **[CodeForge](https://codeforgeapp.duckdns.org/)** | Sandboxed multi-language code execution with deterministic verdict aggregation | Next.js, TypeScript, BullMQ, Redis, Docker, Prisma, Neon PostgreSQL, Azure | Container isolation · deterministic verdicts · DLQ and worker heartbeats · abuse-tested |
-| **[ApexDrive](https://apex-drive-frontend.vercel.app/)** | Subscription rewards platform with a monthly draw engine and charitable giving | React, Vite, Node.js, Supabase, PostgreSQL, Stripe | 4 Stripe webhook lifecycle events · Row Level Security · DB-trigger score window · admin analytics |
+| **[GateForge](https://github.com/ManasBhardwaj07/GateForge)** | Multi-tenant API gateway: auth, rate limiting, routing, and observability | TypeScript, Node.js, Express, Redis (Lua), PostgreSQL, Next.js, Docker, Azure | Atomic Lua rate limiting · two-phase SSRF defense · plane isolation · 108 tests |
+| **[CodeForge](https://github.com/ManasBhardwaj07/CodeForge)** | Sandboxed multi-language code execution with deterministic verdict aggregation | Next.js, TypeScript, BullMQ, Redis, Docker, Prisma, Neon PostgreSQL, Azure | Container isolation · deterministic verdicts · DLQ and worker heartbeats · abuse-tested |
+| **[ApexDrive](https://github.com/ManasBhardwaj07/ApexDrive)** | Subscription rewards platform with a monthly draw engine and charitable giving | React, Vite, Node.js, Supabase, PostgreSQL, Stripe | 4 Stripe webhook lifecycle events · Row Level Security · DB-trigger score window · admin analytics |
 | **[ProjectHub](https://github.com/ManasBhardwaj07/ProjectHub)** | Real-time collaborative workspace with multi-user sync | React, Node.js, Express, Socket.IO, MongoDB Atlas, JWT | Drag-and-drop React UI · live WebSocket sync · RBAC · tokenized password reset |
 | **[QueueForge](https://github.com/ManasBhardwaj07/QueueForge)** | Asynchronous distributed job processing with worker isolation | Node.js, BullMQ, Redis, MongoDB, Docker Compose, AWS EC2 | Exponential backoff · retryable/permanent failure classification · 10/10 jobs completed in documented burst test |
 
@@ -150,4 +150,4 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 ---
 
-&lt;p align="center"&gt;&lt;i&gt;I build things that work, and I'm happy to walk you through any of them.&lt;/i&gt;&lt;/p&gt;
+<p align="center"><i>Open to software engineering roles. Everything above is live, tested, and taking traffic.</i></p>
