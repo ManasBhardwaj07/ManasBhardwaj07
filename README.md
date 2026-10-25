@@ -1,10 +1,18 @@
-# Manas Bhardwaj
+<h1 align="center">Manas Bhardwaj</h1>
 
-### Software Engineer · Full-Stack & Backend Systems
+<h3 align="center">Software Engineer &nbsp;·&nbsp; Full-Stack & Backend Systems</h3>
 
-[![GateForge Live Demo](https://img.shields.io/badge/GateForge-Live-0ea5e9?style=flat-square)](https://gateforgeapp.duckdns.org/) [![CodeForge Live Demo](https://img.shields.io/badge/CodeForge-Live-8b5cf6?style=flat-square)](https://codeforgeapp.duckdns.org/) [![ApexDrive Live Demo](https://img.shields.io/badge/ApexDrive-Live-f59e0b?style=flat-square)](https://apex-drive-frontend.vercel.app/)
+<p align="center">
+<a href="https://gateforgeapp.duckdns.org/"><img alt="GateForge Live Demo" src="https://img.shields.io/badge/GateForge-Live-0ea5e9?style=flat-square" /></a>
+&nbsp;
+<a href="https://codeforgeapp.duckdns.org/"><img alt="CodeForge Live Demo" src="https://img.shields.io/badge/CodeForge-Live-8b5cf6?style=flat-square" /></a>
+&nbsp;
+<a href="https://apex-drive-frontend.vercel.app/"><img alt="ApexDrive Live Demo" src="https://img.shields.io/badge/ApexDrive-Live-f59e0b?style=flat-square" /></a>
+</p>
 
-**Frontend Interfaces** · **End-to-End Product Engineering** · **APIs & Backend Systems**
+<p align="center">
+<b>Frontend Interfaces</b> &nbsp;·&nbsp; <b>End-to-End Product Engineering</b> &nbsp;·&nbsp; <b>APIs & Backend Systems</b>
+</p>
 
 ---
 
@@ -16,11 +24,11 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 ### GateForge — Programmable API Gateway
 
-&gt; `TypeScript · Node.js · Express · Redis (Lua) · PostgreSQL · Prisma · Next.js · Docker · Azure · Caddy`
-&gt;
-&gt; Multi-tenant API traffic control with atomic Redis rate limits, quota enforcement, longest-prefix routing, and SSRF-aware upstream validation.
-&gt;
-&gt; **Interface:** Next.js dashboard with live metrics, a traffic playground, and a per-request Decision Inspector.
+> `TypeScript · Node.js · Express · Redis (Lua) · PostgreSQL · Prisma · Next.js · Docker · Azure · Caddy`
+> >
+> Multi-tenant API traffic control with atomic Redis rate limits, quota enforcement, longest-prefix routing, and SSRF-aware upstream validation.
+> >
+> **Interface:** Next.js dashboard with live metrics, a traffic playground, and a per-request Decision Inspector.
 
 ```text
     CLIENT TRAFFIC (X-API-Key)
@@ -66,11 +74,11 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 ### CodeForge — Sandboxed Code Execution Platform
 
-&gt; `Next.js · TypeScript · BullMQ · Redis · Docker · Prisma · Neon PostgreSQL · Azure · Caddy`
-&gt;
-&gt; Queue-backed code execution with Docker isolation, worker heartbeats, and deterministic verdict aggregation across 5 languages (JavaScript, Python, C, C++, Java).
-&gt;
-&gt; **Interface:** Next.js app with a code editor, submission history, and live status polling.
+> `Next.js · TypeScript · BullMQ · Redis · Docker · Prisma · Neon PostgreSQL · Azure · Caddy`
+> >
+> Queue-backed code execution with Docker isolation, worker heartbeats, and deterministic verdict aggregation across 5 languages (JavaScript, Python, C, C++, Java).
+> >
+> **Interface:** Next.js app with a code editor, submission history, and live status polling.
 
 ```text
   CLIENT / CODE EDITOR (JavaScript · Python · C · C++ · Java)
@@ -92,7 +100,6 @@ I build full-stack software — React and Next.js interfaces on top of backend s
   ┌─ NODE.JS WORKER ─────────────────────────────────────────────────────────────────────────────┐
   │ Docker sandbox [A] · one ephemeral container per execution                                   │
   │ Non-root user · read-only root filesystem · hard timeout · bounded output                    │
-  │ --network=none · memory limit enforced                                                       │
   │                                                                                              │
   │ Verdict aggregation [B] · deterministic precedence                                           │
   │ Accepted · Compile Error · Timeout · Runtime Error · Wrong Answer                            │
@@ -109,7 +116,7 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 **Key decisions:**
 
-- **[A] Untrusted code, contained:** Every execution runs in a newly spawned, ephemeral Docker container with no network access (`--network=none`), a hard memory limit, a non-root user, a read-only root filesystem, and bounded output under a hard timeout.
+- **[A] Untrusted code, contained:** Every execution runs in a newly spawned, ephemeral Docker container with a hard timeout, output truncation, a non-root user, and a read-only root filesystem.
 - **[B] Run vs Submit:** An ephemeral `Run` path with custom input vs. a DB-backed `Submit` path tested against hidden cases, with a deterministic verdict hierarchy (`TIMEOUT` strictly outranks `WRONG_ANSWER`).
 - **[C] Designed for failure:** Redis TTL heartbeats feed queue-health endpoints, failed jobs land in an inspectable Dead Letter Queue, and dedicated scripts test infinite loops, stdout flooding, orphan-container cleanup, and worker hard-kill recovery.
 
@@ -141,8 +148,12 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 ---
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/manas-bhardwaj-/) &nbsp; [![Email](https://img.shields.io/badge/Email-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:manasbhardwaj264@gmail.com)
+<p align="center">
+  <a href="https://www.linkedin.com/in/manas-bhardwaj-/"><img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white" /></a>
+  &nbsp;
+  <a href="mailto:manasbhardwaj264@gmail.com"><img alt="Email" src="https://img.shields.io/badge/Email-D14836?style=flat-square&logo=gmail&logoColor=white" /></a>
+</p>
 
-*Build it. Break it on purpose. Keep it running.*
+<p align="center"><i>Build it. Break it on purpose. Keep it running.</i></p>
 
-*Lore: built a platform that runs strangers' code on my own server. Nothing has escaped the sandbox — yet.*
+<p align="center"><i>Lore: built a platform that runs strangers' code on my own server. Nothing has escaped the sandbox — yet.</i></p>
