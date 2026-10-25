@@ -7,9 +7,9 @@
   &nbsp;
   <a href="mailto:manasbhardwaj264@gmail.com"><img alt="Email" src="https://img.shields.io/badge/Email-D14836?style=flat-square&logo=gmail&logoColor=white" /></a>
   &nbsp;
-  <a href="https://gateforgeapp.duckdns.org"><img alt="GateForge Live Demo" src="https://img.shields.io/badge/GateForge-Live-0ea5e9?style=flat-square" /></a>
+  <a href="https://gateforgeapp.duckdns.org/"><img alt="GateForge Live Demo" src="https://img.shields.io/badge/GateForge-Live-0ea5e9?style=flat-square" /></a>
   &nbsp;
-  <a href="https://codeforgeapp.duckdns.org"><img alt="CodeForge Live Demo" src="https://img.shields.io/badge/CodeForge-Live-8b5cf6?style=flat-square" /></a>
+  <a href="https://codeforgeapp.duckdns.org/"><img alt="CodeForge Live Demo" src="https://img.shields.io/badge/CodeForge-Live-8b5cf6?style=flat-square" /></a>
   &nbsp;
   <a href="https://apex-drive-frontend.vercel.app/"><img alt="ApexDrive Live Demo" src="https://img.shields.io/badge/ApexDrive-Live-f59e0b?style=flat-square" /></a>
 </p>
@@ -47,9 +47,9 @@ I build full-stack software — React and Next.js interfaces on top of backend s
   │ │                    │   │                    │   │ DNS rebinding [B]  │   │                    │  │
   │ └────────────────────┘   └────────────────────┘   └────────────────────┘   └────────────────────┘  │
   └────────────────────────────────────────────────────────────────────────────────────────────────────┘
-                  │                                  │
-                  ▲ reads state on every request     ▼ proxied request
-                  │                                  │
+                  │                                 │
+                  ▲ reads state on every request    ▼ proxied request
+                  │                                 │
   ┌─ STATE ────────────────────────┐   ┌─ UPSTREAM SERVICES ──────┐   ┌─ DASHBOARD :3000 ──────────────┐
   │ PostgreSQL 16 · source         │   │ Demo APIs:               │   │ Next.js via Caddy              │
   │ Prisma · Redis 7 cache         │   │ mock-orders :5001        │   │ Live metrics + playground      │
@@ -71,7 +71,7 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 - **[B] SSRF defense in two phases:** Upstream targets are validated when routes are defined and re-validated at connection time with IP pinning, covering private subnets, link-local and cloud-metadata addresses, and DNS rebinding.
 - **[C] Control plane never public:** The admin API runs on `:4001` inside the internal Docker network and is never exposed through Caddy. API keys are stored only as SHA-256 hashes.
 
-**108 Vitest tests across 11 suites** &nbsp;·&nbsp; [Live Demo](https://gateforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/GateForge)
+**108 Vitest tests across 11 suites** &nbsp;·&nbsp; [Live Demo](https://gateforgeapp.duckdns.org/) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/GateForge)
 
 ---
 
@@ -108,8 +108,8 @@ I build full-stack software — React and Next.js interfaces on top of backend s
   │ Accepted · Compile Error · Timeout · Runtime Error · Wrong Answer                            │
   │ TIMEOUT outranks WRONG_ANSWER                                                                │
   └──────────────────────────────────────────────────────────────────────────────────────────────┘
-              │ results + verdicts                                   │ on failure [C]
-              ▼                                                      ▼
+              │ results + verdicts                                │ on failure [C]
+              ▼                                                   ▼
   ┌─ NEON POSTGRESQL (via Prisma) ─────────────┐    ┌─ RETRY → DEAD LETTER QUEUE ────────────────┐
   │ Problems · test cases · submissions        │    │ Failed jobs retried, then parked           │
   │ Verdicts · pooling tuned for               │    │ Endpoints: inspect · replay · delete       │
@@ -122,7 +122,7 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 - **[B] Run vs Submit:** An ephemeral `Run` path with custom input vs. a DB-backed `Submit` path tested against hidden cases, with a deterministic verdict hierarchy (`TIMEOUT` strictly outranks `WRONG_ANSWER`).
 - **[C] Designed for failure:** Redis TTL heartbeats feed queue-health endpoints, failed jobs land in an inspectable Dead Letter Queue, and dedicated scripts test infinite loops, stdout flooding, orphan-container cleanup, and worker hard-kill recovery.
 
-[Live Demo](https://codeforgeapp.duckdns.org) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/CodeForge)
+[Live Demo](https://codeforgeapp.duckdns.org/) &nbsp;·&nbsp; [Source Code](https://github.com/ManasBhardwaj07/CodeForge)
 
 ---
 
@@ -130,9 +130,9 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 | Project | What it solves | Stack | Key Outcomes |
 |---|---|---|---|
-| **[GateForge](https://github.com/ManasBhardwaj07/GateForge)** | Multi-tenant API gateway: auth, rate limiting, routing, and observability | TypeScript, Node.js, Express, Redis (Lua), PostgreSQL, Next.js, Docker, Azure | Atomic Lua rate limiting · two-phase SSRF defense · plane isolation · 108 tests |
-| **[CodeForge](https://github.com/ManasBhardwaj07/CodeForge)** | Sandboxed multi-language code execution with deterministic verdict aggregation | Next.js, TypeScript, BullMQ, Redis, Docker, Prisma, Neon PostgreSQL, Azure | Container isolation · deterministic verdicts · DLQ and worker heartbeats · abuse-tested |
-| **[ApexDrive](https://github.com/ManasBhardwaj07/ApexDrive)** | Subscription rewards platform with a monthly draw engine and charitable giving | React, Vite, Node.js, Supabase, PostgreSQL, Stripe | 4 Stripe webhook lifecycle events · Row Level Security · DB-trigger score window · admin analytics |
+| **[GateForge](https://gateforgeapp.duckdns.org/)** | Multi-tenant API gateway: auth, rate limiting, routing, and observability | TypeScript, Node.js, Express, Redis (Lua), PostgreSQL, Next.js, Docker, Azure | Atomic Lua rate limiting · two-phase SSRF defense · plane isolation · 108 tests |
+| **[CodeForge](https://codeforgeapp.duckdns.org/)** | Sandboxed multi-language code execution with deterministic verdict aggregation | Next.js, TypeScript, BullMQ, Redis, Docker, Prisma, Neon PostgreSQL, Azure | Container isolation · deterministic verdicts · DLQ and worker heartbeats · abuse-tested |
+| **[ApexDrive](https://apex-drive-frontend.vercel.app/)** | Subscription rewards platform with a monthly draw engine and charitable giving | React, Vite, Node.js, Supabase, PostgreSQL, Stripe | 4 Stripe webhook lifecycle events · Row Level Security · DB-trigger score window · admin analytics |
 | **[ProjectHub](https://github.com/ManasBhardwaj07/ProjectHub)** | Real-time collaborative workspace with multi-user sync | React, Node.js, Express, Socket.IO, MongoDB Atlas, JWT | Drag-and-drop React UI · live WebSocket sync · RBAC · tokenized password reset |
 | **[QueueForge](https://github.com/ManasBhardwaj07/QueueForge)** | Asynchronous distributed job processing with worker isolation | Node.js, BullMQ, Redis, MongoDB, Docker Compose, AWS EC2 | Exponential backoff · retryable/permanent failure classification · 10/10 jobs completed in documented burst test |
 
@@ -150,4 +150,4 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 ---
 
-<p align="center"><i>Open to software engineering roles. Everything above is live, tested, and taking traffic.</i></p>
+<p align="center"><i>From the screen a user sees to the system that keeps it running.</i></p>
