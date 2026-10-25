@@ -25,9 +25,9 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 ### GateForge — Programmable API Gateway
 
 > `TypeScript · Node.js · Express · Redis (Lua) · PostgreSQL · Prisma · Next.js · Docker · Azure · Caddy`
-> >
+> 
 > Multi-tenant API traffic control with atomic Redis rate limits, quota enforcement, longest-prefix routing, and SSRF-aware upstream validation.
-> >
+>
 > **Interface:** Next.js dashboard with live metrics, a traffic playground, and a per-request Decision Inspector.
 
 ```text
@@ -75,9 +75,9 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 ### CodeForge — Sandboxed Code Execution Platform
 
 > `Next.js · TypeScript · BullMQ · Redis · Docker · Prisma · Neon PostgreSQL · Azure · Caddy`
-> >
+> 
 > Queue-backed code execution with Docker isolation, worker heartbeats, and deterministic verdict aggregation across 5 languages (JavaScript, Python, C, C++, Java).
-> >
+> 
 > **Interface:** Next.js app with a code editor, submission history, and live status polling.
 
 ```text
@@ -100,7 +100,7 @@ I build full-stack software — React and Next.js interfaces on top of backend s
   ┌─ NODE.JS WORKER ─────────────────────────────────────────────────────────────────────────────┐
   │ Docker sandbox [A] · one ephemeral container per execution                                   │
   │ Non-root user · read-only root filesystem · hard timeout · bounded output                    │
-  │                                                                                              │
+  │ --network=none · memory limit enforced                                                       │
   │ Verdict aggregation [B] · deterministic precedence                                           │
   │ Accepted · Compile Error · Timeout · Runtime Error · Wrong Answer                            │
   │ TIMEOUT outranks WRONG_ANSWER                                                                │
@@ -116,7 +116,7 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 **Key decisions:**
 
-- **[A] Untrusted code, contained:** Every execution runs in a newly spawned, ephemeral Docker container with a hard timeout, output truncation, a non-root user, and a read-only root filesystem.
+- **[A] Untrusted code, contained:** Every execution runs in a newly spawned, ephemeral Docker container with no network access (`--network=none`), a hard memory limit, a non-root user, a read-only root filesystem, and bounded output under a hard timeout.
 - **[B] Run vs Submit:** An ephemeral `Run` path with custom input vs. a DB-backed `Submit` path tested against hidden cases, with a deterministic verdict hierarchy (`TIMEOUT` strictly outranks `WRONG_ANSWER`).
 - **[C] Designed for failure:** Redis TTL heartbeats feed queue-health endpoints, failed jobs land in an inspectable Dead Letter Queue, and dedicated scripts test infinite loops, stdout flooding, orphan-container cleanup, and worker hard-kill recovery.
 
