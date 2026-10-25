@@ -1,18 +1,10 @@
-&lt;h1 align="center"&gt;Manas Bhardwaj&lt;/h1&gt;
+# Manas Bhardwaj
 
-&lt;h3 align="center"&gt;Software Engineer &nbsp;·&nbsp; Full-Stack & Backend Systems&lt;/h3&gt;
+### Software Engineer · Full-Stack & Backend Systems
 
-&lt;p align="center"&gt;
-&lt;a href="https://gateforgeapp.duckdns.org/"&gt;&lt;img alt="GateForge Live Demo" src="https://img.shields.io/badge/GateForge-Live-0ea5e9?style=flat-square" /&gt;&lt;/a&gt;
-&nbsp;
-&lt;a href="https://codeforgeapp.duckdns.org/"&gt;&lt;img alt="CodeForge Live Demo" src="https://img.shields.io/badge/CodeForge-Live-8b5cf6?style=flat-square" /&gt;&lt;/a&gt;
-&nbsp;
-&lt;a href="https://apex-drive-frontend.vercel.app/"&gt;&lt;img alt="ApexDrive Live Demo" src="https://img.shields.io/badge/ApexDrive-Live-f59e0b?style=flat-square" /&gt;&lt;/a&gt;
-&lt;/p&gt;
+[![GateForge Live Demo](https://img.shields.io/badge/GateForge-Live-0ea5e9?style=flat-square)](https://gateforgeapp.duckdns.org/) [![CodeForge Live Demo](https://img.shields.io/badge/CodeForge-Live-8b5cf6?style=flat-square)](https://codeforgeapp.duckdns.org/) [![ApexDrive Live Demo](https://img.shields.io/badge/ApexDrive-Live-f59e0b?style=flat-square)](https://apex-drive-frontend.vercel.app/)
 
-&lt;p align="center"&gt;
-&lt;b&gt;Frontend Interfaces&lt;/b&gt; &nbsp;·&nbsp; &lt;b&gt;End-to-End Product Engineering&lt;/b&gt; &nbsp;·&nbsp; &lt;b&gt;APIs & Backend Systems&lt;/b&gt;
-&lt;/p&gt;
+**Frontend Interfaces** · **End-to-End Product Engineering** · **APIs & Backend Systems**
 
 ---
 
@@ -149,12 +141,8 @@ I build full-stack software — React and Next.js interfaces on top of backend s
 
 ---
 
-&lt;p align="center"&gt;
-  &lt;a href="https://www.linkedin.com/in/manas-bhardwaj-/"&gt;&lt;img alt="LinkedIn" src="https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white" /&gt;&lt;/a&gt;
-  &nbsp;
-  &lt;a href="mailto:manasbhardwaj264@gmail.com"&gt;&lt;img alt="Email" src="https://img.shields.io/badge/Email-D14836?style=flat-square&logo=gmail&logoColor=white" /&gt;&lt;/a&gt;
-&lt;/p&gt;
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/manas-bhardwaj-/) &nbsp; [![Email](https://img.shields.io/badge/Email-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:manasbhardwaj264@gmail.com)
 
-&lt;p align="center"&gt;&lt;i&gt;Build it. Break it on purpose. Keep it running.&lt;/i&gt;&lt;/p&gt;
+*Build it. Break it on purpose. Keep it running.*
 
-&lt;p align="center"&gt;&lt;i&gt;Lore: built a platform that runs strangers' code on my own server. Nothing has escaped the sandbox — yet.&lt;/i&gt;&lt;/p&gt;
+*Lore: built a platform that runs strangers' code on my own server. Nothing has escaped the sandbox — yet.*
