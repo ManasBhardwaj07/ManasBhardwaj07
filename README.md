@@ -16,7 +16,7 @@
 
 ---
 
-I build full-stack software — React and Next.js interfaces on top of backend systems I design for failure: an API gateway, a sandboxed code-execution engine, and distributed job queues. I focus on what happens when things break — burst traffic, hostile code, failed jobs. Previously at **Emendo AI**.
+I build full-stack applications backed by systems designed for when things go wrong—traffic surges, untrusted code, and dropped jobs. Most of my work centers on the hard parts of infrastructure: API gateways, sandboxed execution, and distributed queues that hold up under stress. Previously at Emendo AI.
 
 ---
 
